@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/big"
 	"testing"
 )
@@ -19,7 +20,7 @@ func TestFloorLog2(t *testing.T) {
 		input3.Exp(input2, big.NewInt(int64(n+1)), nil)
 		input3.Sub(input2, bigOne)
 
-		output := n
+		output := uint(n)
 		res := FloorLog2(input1)
 		if res != output {
 			t.Errorf("Error FloorLog2: expected %s, got %s", output, res)
@@ -33,4 +34,7 @@ func TestFloorLog2(t *testing.T) {
 			t.Errorf("Error FloorLog2: expected %s, got %s", output, res)
 		}
 	}
+}
+
+func TestLn(t *testing.T) {
 }
