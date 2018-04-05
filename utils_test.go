@@ -62,9 +62,55 @@ func TestLn(t *testing.T) {
 
 	numerator = (&big.Int{}).Set(MAX_NUMERATOR)
 	numerator.Add(numerator, bigOne)
-	fmt.Println(numerator)
 	res, err := Ln(numerator, bigOne)
 	if err == nil {
 		t.Errorf("Case should return error", res)
+	}
+}
+
+func TestFindPositionInMaxExpArray(t *testing.T) {
+	bigZero := big.NewInt(0)
+	bigOne := big.NewInt(1)
+	for precision := MIN_PRECISION; precision <= MAX_PRECISION; precision++ {
+		maxExp := (&big.Int{}).Set(HelperMaxExpArray[precision])
+		shlVal := big.NewInt(2)
+		shlVal.Exp(shlVal, big.NewInt(int64(MAX_PRECISION-precision)), nil)
+
+		i1 := (&big.Int{}).Set(maxExp)
+		i1.Add(i1, bigZero).Mul(i1, shlVal).Sub(i1, bigOne)
+		o1 := big.NewInt(int64(precision))
+
+		i2 := (&big.Int{}).Set(maxExp)
+		i2.Add(i2, bigZero).Mul(i2, shlVal).Sub(i2, bigZero)
+		o2 := big.NewInt(int64(precision))
+
+		i3 := (&big.Int{}).Set(maxExp)
+		i3.Add(i3, bigOne).Mul(i3, shlVal).Sub(i3, bigOne)
+		o3 := big.NewInt(int64(precision))
+
+		i4 := (&big.Int{}).Set(maxExp)
+		i4.Add(i4, bigOne).Mul(i4, shlVal).Sub(i4, bigZero)
+		o4 := big.NewInt(int64(precision - 1))
+
+		tuples := []map[string]*big.Int{
+			map[string]*big.Int{"input": i1, "output": o1},
+			map[string]*big.Int{"input": i2, "output": o2},
+			map[string]*big.Int{"input": i3, "output": o3},
+			map[string]*big.Int{"input": i4, "output": o4},
+		}
+		for _, el := range tuples {
+			input := el["input"]
+			output := el["output"]
+			res, err := FindPositionInMaxExpArray(input)
+			fmt.Println(input, output, res)
+			fmt.Println(MaxExpArray[32])
+			if big.NewInt(int64(res)).Cmp(output) != 0 {
+				t.Errorf("Output should be %s but it is %d", output, res)
+			}
+			if err != nil && !(precision == MIN_PRECISION && output.Cmp(big.NewInt(int64(precision))) == -1) {
+				t.Error("Failed when it should have passed", input, res, precision, output)
+			}
+		}
+		break
 	}
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"math/big"
 )
 
@@ -19,6 +20,7 @@ var LN2_NUMERATOR = big.NewInt(0)
 var LN2_DENOMINATOR = big.NewInt(0)
 
 func init() {
+	fmt.Println("Init")
 	b, _ := hex.DecodeString("01ffffffffffffffffffffffffffffffff")
 	MAX_NUM.SetBytes(b)
 	b, _ = hex.DecodeString("0080000000000000000000000000000000")
@@ -99,12 +101,13 @@ func Ln(numerator, denominator *big.Int) (*big.Int, error) {
 //	return (fixedExp(lnBaseTimesExp >> (MAX_PRECISION - precision), precision), precision);
 //}
 
-func FindPositionInMaxExpArray(x *big.Int) uint8 {
+func FindPositionInMaxExpArray(x *big.Int) (uint8, error) {
 	lo := uint8(MIN_PRECISION)
 	hi := uint8(MAX_PRECISION)
 
 	for lo+1 < hi {
 		mid := (lo + hi) / 2
+		//fmt.Println(MaxExpArray[mid])
 		if MaxExpArray[mid].Cmp(x) > 0 {
 			lo = mid
 		} else {
@@ -113,12 +116,11 @@ func FindPositionInMaxExpArray(x *big.Int) uint8 {
 	}
 
 	if MaxExpArray[hi].Cmp(x) > 0 {
-		return hi
+		return hi, nil
 	}
 	if MaxExpArray[lo].Cmp(x) > 0 {
-		return lo
+		return lo, nil
 	}
 
-	// TODO assert(false);
-	return 0
+	return 0, errors.New("Position not found")
 }
