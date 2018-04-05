@@ -80,7 +80,7 @@ func Ln(numerator, denominator *big.Int) (*big.Int, error) {
 		for i := MAX_PRECISION - 1; i > 0; i-- {
 			x.Mul(x, x)
 			x.Div(x, FIXED_1)
-			if x.Cmp(FIXED_2) > 0 {
+			if x.Cmp(FIXED_2) >= 0 {
 				x.Rsh(x, 1)
 				t := (&big.Int{}).Set(ONE)
 				t.Lsh(ONE, uint(i-1))
@@ -107,18 +107,17 @@ func FindPositionInMaxExpArray(x *big.Int) (uint8, error) {
 
 	for lo+1 < hi {
 		mid := (lo + hi) / 2
-		//fmt.Println(MaxExpArray[mid])
-		if MaxExpArray[mid].Cmp(x) > 0 {
+		if MaxExpArray[mid].Cmp(x) >= 0 {
 			lo = mid
 		} else {
 			hi = mid
 		}
 	}
 
-	if MaxExpArray[hi].Cmp(x) > 0 {
+	if MaxExpArray[hi].Cmp(x) >= 0 {
 		return hi, nil
 	}
-	if MaxExpArray[lo].Cmp(x) > 0 {
+	if MaxExpArray[lo].Cmp(x) >= 0 {
 		return lo, nil
 	}
 

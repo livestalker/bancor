@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/big"
 	"testing"
 )
@@ -102,13 +101,11 @@ func TestFindPositionInMaxExpArray(t *testing.T) {
 			input := el["input"]
 			output := el["output"]
 			res, err := FindPositionInMaxExpArray(input)
-			fmt.Println(input, output, res)
-			fmt.Println(MaxExpArray[32])
-			if big.NewInt(int64(res)).Cmp(output) != 0 {
+			if err == nil && big.NewInt(int64(res)).Cmp(output) != 0 {
 				t.Errorf("Output should be %s but it is %d", output, res)
 			}
 			if err != nil && !(precision == MIN_PRECISION && output.Cmp(big.NewInt(int64(precision))) == -1) {
-				t.Error("Failed when it should have passed", input, res, precision, output)
+				t.Error("Failed when it should have passed", input, output, precision, res)
 			}
 		}
 		break
