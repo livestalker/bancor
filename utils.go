@@ -123,3 +123,18 @@ func FindPositionInMaxExpArray(x *big.Int) (uint8, error) {
 
 	return 0, errors.New("Position not found")
 }
+
+func FixedExp(x *big.Int, precision uint8) *big.Int {
+	s33, _ := hex.DecodeString("0688589cc0e9505e2f2fee5580000000")
+	f33 := (&big.Int{}).SetBytes(s33)
+	xi := (&big.Int{}).Set(x)
+	res := big.NewInt(0)
+	for _, el := range FactorArray {
+		xi.Mul(xi, x).Rsh(xi, uint(precision)).Mul(xi, el)
+		res.Add(res, xi)
+	}
+	t := (&big.Int{}).Set(ONE)
+	t.Lsh(t, uint(precision))
+	res.Div(res, f33).Add(res, x).Add(res, t)
+	return res
+}

@@ -7,8 +7,11 @@ import (
 
 var strMaxExpArray [128]string
 var MaxExpArray [128]*big.Int
+var strFactor [32]string
+var FactorArray [32]*big.Int
 
 func init() {
+	//
 	strMaxExpArray[0] = "6bffffffffffffffffffffffffffffffff"
 	strMaxExpArray[1] = "67ffffffffffffffffffffffffffffffff"
 	strMaxExpArray[2] = "637fffffffffffffffffffffffffffffff"
@@ -140,5 +143,42 @@ func init() {
 	for i := 0; i < 128; i++ {
 		b, _ := hex.DecodeString(strMaxExpArray[i])
 		MaxExpArray[i] = (&big.Int{}).SetBytes(b)
+	}
+	//
+	strFactor[0] = "03442c4e6074a82f1797f72ac0000000"  // (33! / 2!)
+	strFactor[1] = "0116b96f757c380fb287fd0e40000000"  // (33! / 3!)
+	strFactor[2] = "0045ae5bdd5f0e03eca1ff4390000000"  // (33! / 4!)
+	strFactor[3] = "000defabf91302cd95b9ffda50000000"  // (33! / 5!)
+	strFactor[4] = "0002529ca9832b22439efff9b8000000"  // (33! / 6!)
+	strFactor[5] = "000054f1cf12bd04e516b6da88000000"  // (33! / 7!)
+	strFactor[6] = "00000a9e39e257a09ca2d6db51000000"  // (33! / 8!)
+	strFactor[7] = "0000012e066e7b839fa050c309000000"  // (33! / 9!)
+	strFactor[8] = "0000001e33d7d926c329a1ad1a800000"  // (33! / 10!)
+	strFactor[9] = "00000002bee513bdb4a6b19b5f800000"  // (33! / 11!)
+	strFactor[10] = "000000003a9316fa79b88eccf2a00000" // (33! / 12!)
+	strFactor[11] = "00000000048177ebe1fa812375200000" // (33! / 13!)
+	strFactor[12] = "00000000005263fe90242dcbacf00000" // (33! / 14!)
+	strFactor[13] = "0000000000057e22099c030d94100000" // (33! / 15!)
+	strFactor[14] = "00000000000057e22099c030d9410000" // (33! / 16!)
+	strFactor[15] = "000000000000052b6b54569976310000" // (33! / 17!)
+	strFactor[16] = "000000000000004985f67696bf748000" // (33! / 18!)
+	strFactor[17] = "0000000000000003dea12ea99e498000" // (33! / 19!)
+	strFactor[18] = "000000000000000031880f2214b6e000" // (33! / 20!)
+	strFactor[19] = "0000000000000000025bcff56eb36000" // (33! / 21!)
+	strFactor[20] = "0000000000000000001b722e10ab1000" // (33! / 22!)
+	strFactor[21] = "00000000000000000001317c70077000" // (33! / 23!)
+	strFactor[22] = "000000000000000000000cba84aafa00" // (33! / 24!)
+	strFactor[23] = "000000000000000000000082573a0a00" // (33! / 25!)
+	strFactor[24] = "000000000000000000000005035ad900" // (33! / 26!)
+	strFactor[25] = "0000000000000000000000002f881b00" // (33! / 27!)
+	strFactor[26] = "00000000000000000000000001b29340" // (33! / 28!)
+	strFactor[27] = "000000000000000000000000000efc40" // (33! / 29!)
+	strFactor[28] = "00000000000000000000000000007fe0" // (33! / 30!)
+	strFactor[29] = "00000000000000000000000000000420" // (33! / 31!)
+	strFactor[10] = "00000000000000000000000000000021" // (33! / 32!)
+	strFactor[31] = "00000000000000000000000000000001" // (33! / 33!)
+	for i := 0; i < 31; i++ {
+		b, _ := hex.DecodeString(strFactor[i])
+		FactorArray[i] = (&big.Int{}).SetBytes(b)
 	}
 }
