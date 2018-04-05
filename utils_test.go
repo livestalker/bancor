@@ -104,8 +104,11 @@ func TestFindPositionInMaxExpArray(t *testing.T) {
 			if err == nil && big.NewInt(int64(res)).Cmp(output) != 0 {
 				t.Errorf("Output should be %s but it is %d", output, res)
 			}
+			if err == nil && !(precision > MIN_PRECISION || output.Cmp(big.NewInt(int64(precision))) >= 0) {
+				t.Error("Passed when it should have failed")
+			}
 			if err != nil && !(precision == MIN_PRECISION && output.Cmp(big.NewInt(int64(precision))) == -1) {
-				t.Error("Failed when it should have passed", input, output, precision, res)
+				t.Error("Failed when it should have passed")
 			}
 		}
 		break
