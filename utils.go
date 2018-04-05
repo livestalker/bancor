@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/hex"
 	"errors"
-	"fmt"
 	"math/big"
 )
 
@@ -58,7 +57,6 @@ func FloorLog2(val *big.Int) uint {
 
 func Ln(numerator, denominator *big.Int) (*big.Int, error) {
 	if numerator.Cmp(MAX_NUM) == 1 {
-		fmt.Println(numerator, MAX_NUM)
 		return nil, errors.New("Numerator greater than MAX_NUM")
 	}
 	res := big.NewInt(0)

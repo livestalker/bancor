@@ -37,4 +37,34 @@ func TestFloorLog2(t *testing.T) {
 }
 
 func TestLn(t *testing.T) {
+	bigOne := big.NewInt(1)
+	ILLEGAL_VALUE := big.NewInt(2)
+	ILLEGAL_VALUE.Exp(ILLEGAL_VALUE, big.NewInt(256), nil)
+	MAX_EXPONENT := 1000000
+	MAX_NUMERATOR := big.NewInt(2)
+	MAX_NUMERATOR.Exp(MAX_NUMERATOR, big.NewInt(256-MAX_PRECISION), nil)
+	MAX_NUMERATOR.Sub(MAX_NUMERATOR, bigOne)
+
+	numerator := (&big.Int{}).Set(MAX_NUMERATOR)
+	denominator := (&big.Int{}).Set(MAX_NUMERATOR)
+	denominator.Sub(denominator, bigOne)
+	res, _ := Ln(numerator, denominator)
+	res.Mul(res, big.NewInt(int64(MAX_EXPONENT)))
+	if res.Cmp(ILLEGAL_VALUE) == 1 {
+		t.Errorf("%s output is too large", res)
+	}
+
+	res, _ = Ln(numerator, bigOne)
+	res.Mul(res, big.NewInt(int64(MAX_EXPONENT)))
+	if res.Cmp(ILLEGAL_VALUE) == 1 {
+		t.Errorf("%s output is too large", res)
+	}
+
+	numerator = (&big.Int{}).Set(MAX_NUMERATOR)
+	numerator.Add(numerator, bigOne)
+	fmt.Println(numerator)
+	res, err := Ln(numerator, bigOne)
+	if err == nil {
+		t.Errorf("Case should return error", res)
+	}
 }
