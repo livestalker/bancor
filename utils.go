@@ -93,13 +93,16 @@ func Ln(numerator, denominator *big.Int) (*big.Int, error) {
 	return res, nil
 }
 
-//func Power(baseN, baseD *big.Int, expN, expD uint32) (*big.Int, uint8) {
-//	lnBaseTimesExp, _ := Ln(baseN, baseD)
-//	lnBaseTimesExp.Mul(lnBaseTimesExp, big.NewInt(int64(expN)))
-//	lnBaseTimesExp.Div(lnBaseTimesExp, big.NewInt(int64(expD)))
-//	uint8 precision = findPositionInMaxExpArray(lnBaseTimesExp);
-//	return (fixedExp(lnBaseTimesExp >> (MAX_PRECISION - precision), precision), precision);
-//}
+func Power(baseN, baseD *big.Int, expN, expD uint32) (*big.Int, uint8, error) {
+	lnBaseTimesExp, _ := Ln(baseN, baseD)
+	lnBaseTimesExp.Mul(lnBaseTimesExp, big.NewInt(int64(expN)))
+	lnBaseTimesExp.Div(lnBaseTimesExp, big.NewInt(int64(expD)))
+	precision, err := FindPositionInMaxExpArray(lnBaseTimesExp)
+	if err != nil {
+		return nil, 0, errors.New("Error")
+	}
+	return FixedExp(lnBaseTimesExp.Rsh(lnBaseTimesExp, uint(MAX_PRECISION-precision)), precision), precision, nil
+}
 
 func FindPositionInMaxExpArray(x *big.Int) (uint8, error) {
 	lo := uint8(MIN_PRECISION)

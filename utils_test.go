@@ -121,5 +121,116 @@ func TestFixedExp(t *testing.T) {
 	if res.Cmp(bigOne) != 0 {
 		t.Errorf("Output should be 1 but it is %d", res)
 	}
-	t.Error(FixedExp(big.NewInt(1), 1))
+}
+
+func TestPower1(t *testing.T) {
+	bigOne := big.NewInt(1)
+	MAX_NUMERATOR := big.NewInt(2)
+	MAX_NUMERATOR.Exp(MAX_NUMERATOR, big.NewInt(256-MAX_PRECISION), nil)
+	MAX_NUMERATOR.Sub(MAX_NUMERATOR, bigOne)
+	MAX_EXPONENT := 1000000
+
+	baseN := (&big.Int{}).Set(MAX_NUMERATOR)
+	baseD := (&big.Int{}).Set(MAX_NUMERATOR)
+	baseD.Sub(baseD, bigOne)
+	expN := uint32(MAX_EXPONENT)
+	expD := uint32(MAX_EXPONENT)
+
+	for percent := 1; percent <= 100; percent++ {
+		expN = uint32(MAX_EXPONENT * percent / 100)
+		_, _, err := Power(baseN, baseD, expN, expD)
+		if err == nil {
+			if percent > 100 {
+				t.Error("Passed when it should have failed")
+			}
+		} else {
+			if percent < 101 {
+				t.Error("Failed when it should have passed")
+			}
+		}
+	}
+}
+
+func TestPower2(t *testing.T) {
+	bigOne := big.NewInt(1)
+	MAX_NUMERATOR := big.NewInt(2)
+	MAX_NUMERATOR.Exp(MAX_NUMERATOR, big.NewInt(256-MAX_PRECISION), nil)
+	MAX_NUMERATOR.Sub(MAX_NUMERATOR, bigOne)
+	MAX_EXPONENT := 1000000
+
+	baseN := (&big.Int{}).Set(MAX_NUMERATOR)
+	baseD := (&big.Int{}).Set(MAX_NUMERATOR)
+	baseD.Sub(baseD, bigOne)
+	expN := uint32(MAX_EXPONENT)
+	expD := uint32(MAX_EXPONENT)
+
+	for percent := 1; percent <= 100; percent++ {
+		expD = uint32(MAX_EXPONENT * percent / 100)
+		_, _, err := Power(baseN, baseD, expN, expD)
+		if err == nil {
+			if percent > 100 {
+				t.Error("Passed when it should have failed")
+			}
+		} else {
+			if percent < 101 {
+				t.Error("Failed when it should have passed")
+			}
+		}
+	}
+}
+
+func TestPower3(t *testing.T) {
+	bigOne := big.NewInt(1)
+	MAX_NUMERATOR := big.NewInt(2)
+	MAX_NUMERATOR.Exp(MAX_NUMERATOR, big.NewInt(256-MAX_PRECISION), nil)
+	MAX_NUMERATOR.Sub(MAX_NUMERATOR, bigOne)
+	MIN_DENOMINATOR := (&big.Int{}).Set(bigOne)
+	MAX_EXPONENT := 1000000
+
+	baseN := (&big.Int{}).Set(MAX_NUMERATOR)
+	baseD := (&big.Int{}).Set(MIN_DENOMINATOR)
+	expN := uint32(MAX_EXPONENT)
+	expD := uint32(MAX_EXPONENT)
+
+	for percent := 1; percent <= 100; percent++ {
+		expN = uint32(MAX_EXPONENT * percent / 100)
+		_, _, err := Power(baseN, baseD, expN, expD)
+		if err == nil {
+			if percent > 63 {
+				t.Error("Passed when it should have failed")
+			}
+		} else {
+			if percent < 64 {
+				t.Error("Failed when it should have passed")
+			}
+		}
+	}
+}
+
+func TestPower4(t *testing.T) {
+	bigOne := big.NewInt(1)
+	MAX_NUMERATOR := big.NewInt(2)
+	MAX_NUMERATOR.Exp(MAX_NUMERATOR, big.NewInt(256-MAX_PRECISION), nil)
+	MAX_NUMERATOR.Sub(MAX_NUMERATOR, bigOne)
+	MIN_DENOMINATOR := (&big.Int{}).Set(bigOne)
+	MAX_EXPONENT := 1000000
+
+	baseN := (&big.Int{}).Set(MAX_NUMERATOR)
+	baseD := (&big.Int{}).Set(MIN_DENOMINATOR)
+	expN := uint32(MAX_EXPONENT)
+	expD := uint32(MAX_EXPONENT)
+
+	for percent := 1; percent <= 100; percent++ {
+		expD = uint32(MAX_EXPONENT * percent / 100)
+		_, _, err := Power(baseN, baseD, expN, expD)
+		if err == nil {
+			if percent > 0 {
+				t.Error("Passed when it should have failed")
+			}
+		} else {
+			if percent < 1 {
+				t.Error("Failed when it should have passed")
+			}
+		}
+	}
 }
