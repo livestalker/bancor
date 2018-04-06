@@ -10,6 +10,7 @@ import (
 const (
 	MIN_PRECISION = 32
 	MAX_PRECISION = 127
+	MAX_WEIGHT    = 1000000
 )
 
 var ONE = big.NewInt(1)
