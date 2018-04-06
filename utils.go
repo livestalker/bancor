@@ -6,6 +6,7 @@ import (
 	"math/big"
 )
 
+// Compute the largest integer smaller than or equal to the binary logarithm of the input.
 func FloorLog2(val *big.Int) uint {
 	var res uint
 	n := (&big.Int{}).Set(val)
@@ -30,6 +31,11 @@ func FloorLog2(val *big.Int) uint {
 	return res
 }
 
+// Return floor(ln(numerator / denominator) * 2 ^ MAX_PRECISION), where:
+// - The numerator   is a value between 1 and 2 ^ (256 - MAX_PRECISION) - 1
+// - The denominator is a value between 1 and 2 ^ (256 - MAX_PRECISION) - 1
+// - The output      is a value between 0 and floor(ln(2 ^ (256 - MAX_PRECISION) - 1) * 2 ^ MAX_PRECISION)
+// This functions assumes that the numerator is larger than or equal to the denominator, because the output would be negative otherwise.
 func Ln(numerator, denominator *big.Int) (*big.Int, error) {
 	if numerator.Cmp(MAX_NUM) == 1 {
 		return nil, errors.New("Numerator greater than MAX_NUM")
@@ -66,6 +72,21 @@ func Ln(numerator, denominator *big.Int) (*big.Int, error) {
 	return res, nil
 }
 
+// General Description:
+//         Determine a value of precision.
+//         Calculate an integer approximation of (baseN / baseD) ^ (expN / expD) * 2 ^ precision.
+//         Return the result along with the precision used.
+//
+// Detailed Description:
+//     Instead of calculating "base ^ exp", we calculate "e ^ (ln(base) * exp)".
+//     The value of "ln(base)" is represented with an integer slightly smaller than "ln(base) * 2 ^ precision".
+//     The larger "precision" is, the more accurately this value represents the real value.
+//     However, the larger "precision" is, the more bits are required in order to store this value.
+//     And the exponentiation function, which takes "x" and calculates "e ^ x", is limited to a maximum exponent (maximum value of "x").
+//     This maximum exponent depends on the "precision" used, and it is given by "maxExpArray[precision] >> (MAX_PRECISION - precision)".
+//     Hence we need to determine the highest precision which can be used for the given input, before calling the exponentiation function.
+//     This allows us to compute "base ^ exp" with maximum accuracy and without exceeding 256 bits in any of the intermediate computations.
+//     This functions assumes that "_expN < (1 << 256) / ln(MAX_NUM, 1)", otherwise the multiplication should be replaced with a "safeMul".
 func Power(baseN, baseD *big.Int, expN, expD uint32) (*big.Int, uint8, error) {
 	lnBaseTimesExp, _ := Ln(baseN, baseD)
 	lnBaseTimesExp.Mul(lnBaseTimesExp, big.NewInt(int64(expN)))
@@ -77,6 +98,9 @@ func Power(baseN, baseD *big.Int, expN, expD uint32) (*big.Int, uint8, error) {
 	return FixedExp(lnBaseTimesExp.Rsh(lnBaseTimesExp, uint(MAX_PRECISION-precision)), precision), precision, nil
 }
 
+// The global "maxExpArray" is sorted in descending order, and therefore the following statements are equivalent:
+// - This function finds the position of [the smallest value in "maxExpArray" larger than or equal to "x"]
+// - This function finds the highest position of [a value in "maxExpArray" larger than or equal to "x"]
 func FindPositionInMaxExpArray(x *big.Int) (uint8, error) {
 	lo := uint8(MIN_PRECISION)
 	hi := uint8(MAX_PRECISION)
