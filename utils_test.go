@@ -114,3 +114,12 @@ func TestFindPositionInMaxExpArray(t *testing.T) {
 		break
 	}
 }
+
+func TestFixedExp(t *testing.T) {
+	bigOne := big.NewInt(1)
+	res := FixedExp(big.NewInt(0), 0)
+	if res.Cmp(bigOne) != 0 {
+		t.Errorf("Output should be 1 but it is %d", res)
+	}
+	t.Error(FixedExp(big.NewInt(1), 1))
+}
