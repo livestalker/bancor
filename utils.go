@@ -19,7 +19,7 @@ func FloorLog2(val *big.Int) uint {
 	} else {
 		// Exactly 8 iterations
 		for s := uint(128); s > 0; s = s >> 1 {
-			t := (&big.Int{}).Set(ONE)
+			t := (&big.Int{}).Set(BIG_ONE)
 			t.Lsh(t, uint(s))
 			if n.Cmp(t) >= 0 {
 				n.Rsh(n, uint(s))
@@ -55,8 +55,8 @@ func Ln(numerator, denominator *big.Int) (*big.Int, error) {
 			x.Div(x, FIXED_1)
 			if x.Cmp(FIXED_2) >= 0 {
 				x.Rsh(x, 1)
-				t := (&big.Int{}).Set(ONE)
-				t.Lsh(ONE, uint(i-1))
+				t := (&big.Int{}).Set(BIG_ONE)
+				t.Lsh(BIG_ONE, uint(i-1))
 				res.Add(res, t)
 			}
 		}
@@ -109,7 +109,7 @@ func FixedExp(x *big.Int, precision uint8) *big.Int {
 		xi.Mul(xi, x).Rsh(xi, uint(precision)).Mul(xi, el)
 		res.Add(res, xi)
 	}
-	t := (&big.Int{}).Set(ONE)
+	t := (&big.Int{}).Set(BIG_ONE)
 	t.Lsh(t, uint(precision))
 	res.Div(res, f33).Add(res, x).Add(res, t)
 	return res

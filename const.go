@@ -11,8 +11,8 @@ const (
 	MAX_WEIGHT    = 1000000
 )
 
-var ZERO = big.NewInt(0)
-var ONE = big.NewInt(1)
+var BIG_ZERO = big.NewInt(0)
+var BIG_ONE = big.NewInt(1)
 var MAX_NUM = big.NewInt(0)
 var FIXED_1 = big.NewInt(0)
 var FIXED_2 = big.NewInt(0)
